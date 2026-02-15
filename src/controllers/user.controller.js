@@ -149,8 +149,8 @@ const loggoutUser=asyncHandler(async(req,res)=> {
     await User.findByIdAndUpdate(
         req.user._id,
         {
-            $set:{
-                refreshToken:undefined,
+            $unset:{
+                refreshToken:1,
             }
         },
         {
@@ -171,7 +171,7 @@ const loggoutUser=asyncHandler(async(req,res)=> {
 })
 
 const refreshAccessToken=asyncHandler(async(req,res) => {
-    const incomingRefreshToken=req.cookie.refreshToken || req.body.refreshToken
+    const incomingRefreshToken=req.cookies.refreshToken || req.body.refreshToken
 
     if(!incomingRefreshToken)
     {
@@ -246,7 +246,7 @@ const updateAccountDetails=asyncHandler(async(req,res) => {
     {
         throw new ApiError(400,"No change is made")
     }
-    let updateField;
+    const updateField={};
     if(fullName) updateField.fullName=fullName;
     if(email) updateField.email=email;
 
@@ -300,14 +300,16 @@ const updateUserCoverImage =asyncHandler(async(req,res) => {
     const coverImageLocalPath=req.file?.path
     if(!coverImageLocalPath)
     {
-        throw ApiError(400,"cover image file is missing")
+        throw new ApiError(400,"cover image file is missing")
     }
     
+    let oldCoverImage=req.user?.coverImage;
+
     const coverImage=await uploadOnCloudinary(coverImageLocalPath)
     
-    if(!coverImage.url)
+    if(!coverImage?.url)
     {
-        throw ApiError(400,"Error while uploading on cover image")
+        throw new ApiError(400,"Error while uploading on cover image")
     }
 
     const user=await User.findByIdAndUpdate(
@@ -319,6 +321,8 @@ const updateUserCoverImage =asyncHandler(async(req,res) => {
         },
         {new:true}
     ).select("-password")
+
+    const deleteSuccessfull= await deleteOnCloudinary(oldCoverImage);
 
     return res.status(200)
     .json(new ApiResponse(200,user,"cover image is updated successfully"))
