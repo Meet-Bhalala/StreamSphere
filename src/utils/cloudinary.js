@@ -25,4 +25,29 @@ const uploadOnCloudinary = async (localFilePath) => {
     }
 };
 
-export { uploadOnCloudinary };
+const deleteOnCloudinary= async (cloudinaryUrl) => {
+    try {
+        if(!cloudinaryUrl?.length)
+        {
+            return true;
+        }
+        const urlParts = cloudinaryUrl.split('/upload/');
+        if (urlParts.length < 2) return false;
+
+        const publicIdWithVersion = urlParts[1];
+
+        const publicId = publicIdWithVersion
+            .replace(/^v\d+\//, '')
+            .replace(/\.[^/.]+$/, '');
+
+        const { result } = await cloudinary.uploader.destroy(publicId);
+
+        return result === "ok" || result === "not found";
+
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
+export { uploadOnCloudinary,deleteOnCloudinary };
