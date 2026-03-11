@@ -10,7 +10,7 @@ import {deleteOnCloudinary, uploadOnCloudinary} from "../utils/cloudinary.js"
 const getAllVideos = asyncHandler(async (req, res) => {
     let { page = 1, limit = 10, query, sortBy="createdAt", sortType, userId } = req.query
     page=Math.max(1, parseInt(page))
-    limit=Math.max(1, parseInt(pagelimit))
+    limit=Math.max(1, parseInt(limit))
 
     if(!userId || !mongoose.Types.ObjectId.isValid(userId))
     {
@@ -18,7 +18,6 @@ const getAllVideos = asyncHandler(async (req, res) => {
     }
 
     const filter={}
-    filter.owner=userId
     if(query)
     {
         filter.title={$regex:query,$options:"i"}
@@ -33,7 +32,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
     .skip((page-1)*limit)
     .limit(limit)
 
-    res.status(200)
+    return res.status(200)
     .json(new ApiResponse(200,videos,"Videos is given"))
 })
 

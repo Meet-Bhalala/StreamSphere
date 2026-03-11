@@ -25,7 +25,7 @@ const uploadOnCloudinary = async (localFilePath) => {
     }
 };
 
-const deleteOnCloudinary= async (cloudinaryUrl) => {
+const deleteOnCloudinary= async (cloudinaryUrl,resource_type="image") => {
     try {
         if(!cloudinaryUrl?.length)
         {
@@ -40,7 +40,7 @@ const deleteOnCloudinary= async (cloudinaryUrl) => {
             .replace(/^v\d+\//, '')
             .replace(/\.[^/.]+$/, '');
 
-        const { result } = await cloudinary.uploader.destroy(publicId);
+        const { result } = await cloudinary.uploader.destroy(publicId,{resource_type});
 
         return result === "ok" || result === "not found";
 

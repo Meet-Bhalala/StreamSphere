@@ -6,7 +6,7 @@ const tweetSchema=new Schema({
         required:true,
     },
     owner:{
-        types:Schema.Types.ObjectId,
+        type:Schema.Types.ObjectId,
         ref:"User"
     }
     

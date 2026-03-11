@@ -20,7 +20,7 @@ const generateAccessAndRefereshTokens= async(userId) => {
         return {accessToken,refreshToken}
 
     } catch (error) {
-        throw new ApiError(500,"Something went wrong while generating refresh and acess tokens")
+        throw new ApiError(500,"Something went wrong while generating refresh and access tokens")
     }
 }
 
@@ -40,11 +40,10 @@ const registerUser= asyncHandler( async (req,res) => {
 
     if(existedUser)
     {
-        throw new ApiError(409,"User with email or username alredy exist")
+        throw new ApiError(409,"User with email or username already exist")
     }
 
     const avatarLocalPath=req.files?.avatar[0]?.path;
-    //const covetImageLocalPath=req.files?.coverImage?.[0]?.path;
 
     let coverImageLocalPath;
     if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length>0)
@@ -220,6 +219,11 @@ const changeCurrentPassword=asyncHandler(async(req,res) => {
     const {oldPassword,newPassword}=req.body
 
     const user=await User.findById(req.user?._id)
+
+    if(!user)
+    {
+        throw new ApiError(404,"user not found")
+    }
 
     const isPasswordValid=await user.isPasswordCorrect(oldPassword)
 

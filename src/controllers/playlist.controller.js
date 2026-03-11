@@ -8,7 +8,7 @@ import {asyncHandler} from "../utils/asyncHandler.js"
 
 const createPlaylist = asyncHandler(async (req, res) => {
     let {name, description} = req.body
-    //TODO: create playlist
+
     name=name?.trim()
     description=description?.trim()
     if(!name || !description)
@@ -28,7 +28,7 @@ const createPlaylist = asyncHandler(async (req, res) => {
 
     if(existPlaylist)
     {
-        throw new ApiError(409,"Same name playlist alredy exist")
+        throw new ApiError(409,"Same name playlist already exist")
     }
     const playlist=await Playlist.create(
         {
@@ -44,7 +44,7 @@ const createPlaylist = asyncHandler(async (req, res) => {
 
 const getUserPlaylists = asyncHandler(async (req, res) => {
     const {userId} = req.params
-    //TODO: get user playlists
+
     if(!userId || !mongoose.Types.ObjectId.isValid(userId))
     {
         throw new ApiError(400,"user id is not valid or not given")
@@ -101,7 +101,7 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
 
 const getPlaylistById = asyncHandler(async (req, res) => {
     const {playlistId} = req.params
-    //TODO: get playlist by id
+
     if(!playlistId || !mongoose.Types.ObjectId.isValid(playlistId))
     {
         throw new ApiError(400,"playlist id is not valid or not given")
@@ -204,7 +204,7 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
 
 const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
     const {playlistId, videoId} = req.params
-    // TODO: remove video from playlist
+
     if(!playlistId || !mongoose.Types.ObjectId.isValid(playlistId))
     {
         throw new ApiError(400,"playlist id is not valid or not given")
@@ -246,7 +246,7 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
 
 const deletePlaylist = asyncHandler(async (req, res) => {
     const {playlistId} = req.params
-    // TODO: delete playlist
+
     if(!playlistId || !mongoose.Types.ObjectId.isValid(playlistId))
     {
         throw new ApiError(400,"playlist id is not valid or not given")
@@ -271,7 +271,6 @@ const deletePlaylist = asyncHandler(async (req, res) => {
 const updatePlaylist = asyncHandler(async (req, res) => {
     const {playlistId} = req.params
     let {name, description} = req.body
-    //TODO: update playlist
 
     if(!playlistId || !mongoose.Types.ObjectId.isValid(playlistId))
     {
